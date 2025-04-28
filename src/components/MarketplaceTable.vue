@@ -88,7 +88,7 @@ onMounted(() => {
         <p class="empty-text text-cyan-300">The market appears to be empty. Check back later!</p>
       </div>
 
-      <div v-else class="grid-container grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div v-else class="grid-container grid grid-cols gap-4">
         <div
           v-for="item in items"
           :key="item.id"
