@@ -1,15 +1,12 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  /* optimizeDeps: {
-    exclude: ["oh-vue-icons/icons"]
-  }, */
   plugins: [
-    vue(), 
+    vue(),
     VitePWA({
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['rocket.svg'],
       manifest: {
         name: 'Galactic Fishing Stats',
         short_name: 'GFS',
@@ -27,7 +24,25 @@ export default defineConfig({
             type: 'image/png'
           }
         ]
-      }
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api-game\.bloque\.app\/game\/(market|leaderboard)/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'game-api-cache',
+              expiration: {
+                maxAgeSeconds: 60 * 5,
+                maxEntries: 50,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
+      },
     })
   ],
-})
+});
