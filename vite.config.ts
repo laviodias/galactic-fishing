@@ -12,18 +12,6 @@ export default defineConfig({
         short_name: 'GFS',
         description: 'A website that shows statistics for the game Galactic Fishing',
         theme_color: '#ffffff',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          }
-        ]
       },
       workbox: {
         runtimeCaching: [
@@ -35,6 +23,19 @@ export default defineConfig({
               expiration: {
                 maxAgeSeconds: 60 * 5,
                 maxEntries: 50,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /\.(js|css|png|jpg|jpeg|gif|svg)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'static-assets-cache',
+              expiration: {
+                maxAgeSeconds: 60 * 60 * 24 * 30,
               },
               cacheableResponse: {
                 statuses: [0, 200],
