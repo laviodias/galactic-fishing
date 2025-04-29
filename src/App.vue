@@ -31,7 +31,7 @@ window.addEventListener('offline', updateOnlineStatus);
 
           <div class="network-status flex items-center rounded-full text-sm" :class="{ 'online': isOnline, 'offline': !isOnline }">
             <span class="status-indicator"></span>
-            <span class="status-text">{{ isOnline ? 'Online' : 'Offline Mode' }}</span>
+            <span>{{ isOnline ? 'Online' : 'Offline Mode' }}</span>
           </div>
         </div>
       </div>
@@ -43,9 +43,9 @@ window.addEventListener('offline', updateOnlineStatus);
           <button
             @click="setTab('leaderboard')"
             :class="[
-              'tab-button bg-opacity-60 py-3 px-6 font-medium text-lg focus:outline-none cursor-pointer mr-1',
+              'tab-button bg-opacity-60 py-3 px-6 font-medium text-lg cursor-pointer mr-1',
               activeTab === 'leaderboard'
-                ? 'tab-active border border-cyan-400 text-cyan-300'
+                ? 'border border-cyan-400 text-cyan-300'
                 : 'text-white hover:text-cyan-200'
             ]"
           >
@@ -57,9 +57,9 @@ window.addEventListener('offline', updateOnlineStatus);
           <button
             @click="setTab('marketplace')"
             :class="[
-              'tab-button bg-opacity-60 py-3 px-6 font-medium text-lg focus:outline-none cursor-pointer',
+              'tab-button bg-opacity-60 py-3 px-6 font-medium text-lg cursor-pointer',
               activeTab === 'marketplace'
-                ? 'tab-active border border-cyan-400 text-cyan-300'
+                ? 'border border-cyan-400 text-cyan-300'
                 : 'text-white hover:text-cyan-200'
             ]"
           >
@@ -176,7 +176,7 @@ window.addEventListener('offline', updateOnlineStatus);
 
 .tabs-list {
   display: flex;
-  border-bottom: 1px solid #374151; /* border-indigo-800 */
+  border-bottom: 1px solid #374151;
 }
 
 .tab-button {

@@ -31,16 +31,9 @@ const fetchLeaderboard = async () => {
 
     const data = await response.json();
     players.value = data.players;
-
-    localStorage.setItem('leaderboard-cache', JSON.stringify(data));
-
   } catch (err) {
-    error.value = 'Connection failed. Showing cached data...';
-
-    const cachedData = localStorage.getItem('leaderboard-cache');
-    if (cachedData) {
-      players.value = JSON.parse(cachedData).players;
-    }
+    console.error('Error fetching market data:', err);
+    error.value = 'Connection failed.';
   } finally {
     isLoading.value = false;
   }
@@ -52,7 +45,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-leaderboard-container bg-gradient-45 from-[#121642] to-[#1a1b4b] relative overflow-hidden">
+  <div class="space-leaderboard-container relative overflow-hidden">
     <div class="bg-opacity-80 py-8 backdrop-blur-sm shadow-lg border border-indigo-500">
       <h2 class="text-2xl font-bold text-center mb-6 text-cyan-300 font-space">
         <span class="inline-flex items-center">
@@ -62,12 +55,12 @@ onMounted(() => {
       </h2>
 
       <div v-if="isLoading" class="text-center py-8">
-        <div class="loading-spinner inline-block animate-spin rounded-full h-8 w-8 border-t-2 border border-cyan-400 border-l-transparent border-r-transparent"></div>
-        <p class="text-cyan-300 mt-2">Fetching data from the stars...</p>
+        <div class="loading-spinner inline-block animate-spin rounded-full h-8 w-8 border-t-2 border border-cyan-400"></div>
+        <p class="text-cyan-300 mt-2">Fetching data from the starfish...</p>
       </div>
 
-      <div v-else-if="players.length === 0" class="empty-state text-center py-8">
-        <p class="empty-text text-cyan-300">No data available...</p>
+      <div v-else-if="players.length === 0" class="text-center py-8">
+        <p class="text-cyan-300">No data available...</p>
       </div>
 
       <div v-else class="overflow-auto px-4">
@@ -85,12 +78,12 @@ onMounted(() => {
             <tr v-for="(player, index) in displayedPlayers"
                 :key="player.username"
                 :class="[
-                  index % 2 === 0 ? 'row-even bg-opacity-30' : 'row-odd bg-opacity-50',
-                  index === 0 ? 'border-l-4 border-yellow-400' : '',
-                  index === 1 ? 'border-l-4 border-gray-300' : '',
-                  index === 2 ? 'border-l-4 border-amber-700' : ''
+                  index % 2 === 0 ? 'bg-opacity-30' : 'bg-opacity-50',
+                  index === 0 ? 'border-yellow-400' : '',
+                  index === 1 ? 'border-gray-300' : '',
+                  index === 2 ? 'border-amber-700' : ''
                 ]"
-                class="leaderboard-row transition-colors duration-300 hover:bg-indigo-800">
+                class="leaderboard-row transition-colors duration-300">
               <td class="py-3 px-4">
                 <div class="flex items-center">
                   <span v-if="player.rank <= 3" class="rank-icon mr-2">
@@ -179,7 +172,7 @@ onMounted(() => {
 }
 
 .leaderboard-row:hover {
-  background-color: rgba(55, 65, 81, 0.5); /* bg-indigo-800 com opacidade */
+  background-color: rgba(55, 65, 81, 0.5);
 }
 
 .rank-icon {

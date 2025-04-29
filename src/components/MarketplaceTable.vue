@@ -26,17 +26,9 @@ const fetchMarketItems = async () => {
 
     const data = await response.json();
     items.value = data.items;
-
-    localStorage.setItem('market-cache', JSON.stringify(data));
-
   } catch (err) {
     console.error('Error fetching market data:', err);
-    error.value = 'Connection failed. Showing cached data...';
-
-    const cachedData = localStorage.getItem('market-cache');
-    if (cachedData) {
-      items.value = JSON.parse(cachedData).items;
-    }
+    error.value = 'Connection failed.';
   } finally {
     isLoading.value = false;
   }
@@ -70,8 +62,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-market-container bg-gradient-45 from-[#121642] to-[#1a1b4b] relative overflow-hidden">
-    <div class="market-card bg-opacity-80 py-8 backdrop-blur-sm shadow-lg border border-indigo-500">
+  <div class="space-market-container relative overflow-hidden">
+    <div class="bg-opacity-80 py-8 backdrop-blur-sm shadow-lg border border-indigo-500">
       <h2 class="text-2xl font-bold text-center mb-6 text-cyan-300 font-space">
         <span class="inline-flex items-center">
           <v-icon name="fa-shopping-basket" class="mr-3" />
@@ -80,19 +72,19 @@ onMounted(() => {
       </h2>
 
       <div v-if="isLoading" class="text-center py-8">
-        <div class="loading-spinner inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-400 border-l-transparent border-r-transparent"></div>
+        <div class="loading-spinner inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-400"></div>
         <p class="text-cyan-300 mt-2">Scanning interstellar bazaars...</p>
       </div>
 
-      <div v-else-if="items.length === 0" class="empty-state text-center py-8">
-        <p class="empty-text text-cyan-300">The market appears to be empty. Check back later!</p>
+      <div v-else-if="items.length === 0" class="text-center py-8">
+        <p class="text-cyan-300">The market appears to be empty. Check back later!</p>
       </div>
 
       <div v-else class="grid-container grid grid-cols gap-4">
         <div
           v-for="item in items"
           :key="item.id"
-          class="market-item item-card transition-transform duration-200 ease-in-out hover:translate-y-[-4px] hover:shadow-lg rounded-lg border border-indigo-700 overflow-hidden"
+          class="rounded-lg border border-indigo-700 overflow-hidden"
           :class="getItemTypeClass(item.type)"
         >
           <div class="item-header flex items-center p-4">
@@ -100,12 +92,12 @@ onMounted(() => {
               <v-icon :name="item.type == 'fishing_rod' ? 'gi-fishing-pole' : 'gi-poison-bottle'" />
             </div>
             <div class="flex-1">
-              <h3 class="item-name font-medium text-white">{{ item.name }}</h3>
-              <div class="item-type text-xs">{{ formatItemType(item.type) }}</div>
+              <h3 class="font-medium text-white">{{ item.name }}</h3>
+              <div class="text-xs">{{ formatItemType(item.type) }}</div>
             </div>
             <div class="item-cost flex items-center bg-opacity-80 py-1 px-3 rounded-full">
               <v-icon name="ri-money-dollar-circle-fill" class="h-4 w-4 text-yellow-400 mr-1" />
-              <span class="item-cost-value font-medium text-sm text-yellow-300">{{ item.cost.toLocaleString() }}</span>
+              <span class="font-medium text-sm text-yellow-300">{{ item.cost.toLocaleString() }}</span>
             </div>
           </div>
           <div class="item-description p-4 text-sm text-gray-300">
@@ -114,14 +106,14 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="error" class="error-message mt-4 text-sm text-orange-300 bg-opacity-30 bg-orange-900 p-3 rounded-md">
+      <div v-if="error" class="mt-4 text-sm text-orange-300 bg-opacity-30 bg-orange-900 p-3 rounded-md">
         {{ error }}
       </div>
 
       <div class="actions-container mt-6 text-center">
         <button
           @click="fetchMarketItems"
-          class="inline-flex items-center cursor-pointer py-3 px-3 text-white rounded-lg transition-colors bg-opacity-60 duration-300 hover:bg-indigo-700">
+          class="inline-flex items-center cursor-pointer py-3 px-3 text-white rounded-lg bg-opacity-60">
           <v-icon name="hi-refresh" class="mr-2" />
           Refresh
         </button>
