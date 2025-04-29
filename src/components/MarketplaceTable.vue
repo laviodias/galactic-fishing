@@ -11,11 +11,11 @@ interface MarketItem {
 
 const items = ref<MarketItem[]>([]);
 const isLoading = ref(true);
-const error = ref<string | null>(null);
+const message = ref<string | null>(null);
 
 const fetchMarketItems = async () => {
   isLoading.value = true;
-  error.value = null;
+  message.value = null;
 
   try {
     const response = await fetch('https://api-game.bloque.app/game/market');
@@ -26,9 +26,13 @@ const fetchMarketItems = async () => {
 
     const data = await response.json();
     items.value = data.items;
+
+    if (response.status === 0 || response.headers.get('X-From-Cache') === 'true') {
+      message.value = 'Market data loaded from cache.';
+    }
   } catch (err) {
     console.error('Error fetching market data:', err);
-    error.value = 'Connection failed.';
+    message.value = 'Connection failed.';
   } finally {
     isLoading.value = false;
   }
@@ -106,8 +110,8 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="error" class="mt-4 text-sm text-orange-300 bg-opacity-30 bg-orange-900 p-3 rounded-md">
-        {{ error }}
+      <div v-if="message" class="error-message mt-4 text-sm bg-opacity-30 bg-red-600 text-white p-3 rounded-md">
+        {{ message }}
       </div>
 
       <div class="actions-container mt-6 text-center">

@@ -16,11 +16,11 @@ const seeAllPlayers = ref(false);
 const displayedPlayers = computed(() => {
   return seeAllPlayers.value ? players.value : players.value.slice(0, 20);
 });
-const error = ref<string | null>(null);
+const message = ref<string | null>(null);
 
 const fetchLeaderboard = async () => {
   isLoading.value = true;
-  error.value = null;
+  message.value = null;
 
   try {
     const response = await fetch('https://api-game.bloque.app/game/leaderboard');
@@ -31,9 +31,13 @@ const fetchLeaderboard = async () => {
 
     const data = await response.json();
     players.value = data.players;
+
+    if (response.status === 0 || response.headers.get('X-From-Cache') === 'true') {
+      message.value = 'Leaderboard data loaded from cache.';
+    }
   } catch (err) {
     console.error('Error fetching market data:', err);
-    error.value = 'Connection failed.';
+    message.value = 'Connection failed.';
   } finally {
     isLoading.value = false;
   }
@@ -60,7 +64,7 @@ onMounted(() => {
       </div>
 
       <div v-else-if="players.length === 0" class="text-center py-8">
-        <p class="text-cyan-300">No data available...</p>
+        <p class="text-cyan-300">The leaderboard is compromised. Sorry, check back later...</p>
       </div>
 
       <div v-else class="overflow-auto px-4">
@@ -120,8 +124,8 @@ onMounted(() => {
         </table>
       </div>
 
-      <div v-if="error" class="error-message mt-4 text-sm text-orange-300 bg-opacity-30 bg-orange-900 p-3 rounded-lg">
-        {{ error }}
+      <div v-if="message" class="error-message mt-4 text-sm text-white bg-opacity-30 bg-red-600 p-3 rounded-lg">
+        {{ message }}
       </div>
 
       <div class="actions-container mt-6 text-center flex justify-center gap-4">
@@ -206,10 +210,5 @@ onMounted(() => {
   height: 1rem;
   width: 1rem;
   margin-right: 0.25rem;
-}
-
-.error-message {
-  padding: 0.5rem;
-  border-radius: 0.25rem;
 }
 </style>

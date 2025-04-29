@@ -64,10 +64,6 @@ button {
   color: #818cf8;
 }
 
-.text-orange-300 {
-  color: #fbb03b;
-}
-
 /* Backgrounds */
 .bg-indigo-900 {
   background-color: #1e293b;
@@ -83,10 +79,6 @@ button {
 
 .bg-opacity-30 {
   background-color: rgba(75, 85, 99, 0.3);
-}
-
-.bg-orange-900 {
-  background-color: #7c2d12;
 }
 
 .bg-opacity-60 {
@@ -344,4 +336,10 @@ button {
 
 .grid-container {
   padding: 1rem;
+}
+
+.error-message {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin: 1rem 2rem;
 }
