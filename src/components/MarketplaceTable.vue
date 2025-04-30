@@ -27,11 +27,12 @@ const fetchMarketItems = async () => {
     const data = await response.json();
     items.value = data.items;
 
-    if (response.status === 0 || response.headers.get('X-From-Cache') === 'true') {
+    if (response.headers.get('X-From-Service-Worker') === 'true') {
       message.value = 'Market data loaded from cache.';
+    } else {
+      message.value = null;
     }
   } catch (err) {
-    console.error('Error fetching market data:', err);
     message.value = 'Connection failed.';
   } finally {
     isLoading.value = false;

@@ -36,7 +36,6 @@ const fetchLeaderboard = async () => {
       message.value = 'Leaderboard data loaded from cache.';
     }
   } catch (err) {
-    console.error('Error fetching market data:', err);
     message.value = 'Connection failed.';
   } finally {
     isLoading.value = false;
