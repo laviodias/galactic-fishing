@@ -154,9 +154,11 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
 
-  .inline-flex {
-    @media (max-width: 768px) {
-      display: initial;
+  h2 {
+    .inline-flex {
+      @media (max-width: 768px) {
+        display: initial;
+      }
     }
   }
 }
