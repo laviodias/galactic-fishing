@@ -10,13 +10,22 @@ interface Player {
   isInfected: boolean;
 }
 
+const PLAYERS_PER_PAGE = 20;
+
 const players = ref<Player[]>([]);
 const isLoading = ref(true);
-const seeAllPlayers = ref(false);
-const displayedPlayers = computed(() => {
-  return seeAllPlayers.value ? players.value : players.value.slice(0, 20);
-});
 const message = ref<string | null>(null);
+const currentPage = ref(1);
+
+const pageCount = computed(() => {
+  return Math.ceil(players.value.length / PLAYERS_PER_PAGE);
+});
+
+const paginatedPlayers = computed(() => {
+  const start = (currentPage.value - 1) * PLAYERS_PER_PAGE;
+  const end = start + PLAYERS_PER_PAGE;
+  return players.value.slice(start, end);
+});
 
 const fetchLeaderboard = async () => {
   isLoading.value = true;
@@ -31,6 +40,7 @@ const fetchLeaderboard = async () => {
 
     const data = await response.json();
     players.value = data.players;
+    currentPage.value = 1;
 
     if (!navigator.onLine) {
       message.value = 'Leaderboard data loaded from cache.';
@@ -47,6 +57,12 @@ const fetchLeaderboard = async () => {
 onMounted(() => {
   fetchLeaderboard();
 });
+
+const changePage = (page: number) => {
+  if (page >= 1 && page <= pageCount.value) {
+    currentPage.value = page;
+  }
+};
 </script>
 
 <template>
@@ -80,7 +96,7 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(player, index) in displayedPlayers"
+            <tr v-for="(player, index) in paginatedPlayers"
                 :key="player.username"
                 :class="[
                   index % 2 === 0 ? 'bg-opacity-30' : 'bg-opacity-50',
@@ -124,6 +140,25 @@ onMounted(() => {
           </tbody>
         </table>
       </div>
+      <div v-if="pageCount > 1" class="mt-6 flex justify-center items-center gap-4">
+        <button
+          @click="changePage(currentPage - 1)"
+          :disabled="currentPage === 1"
+        >
+          Previous
+        </button>
+
+        <span class="text-cyan-300">
+          Page {{ currentPage }} of {{ pageCount }}
+        </span>
+
+        <button
+          @click="changePage(currentPage + 1)"
+          :disabled="currentPage === pageCount"
+        >
+          Next
+        </button>
+      </div>
 
       <div v-if="message" class="error-message mt-4 text-sm text-white bg-opacity-30 bg-red-600 p-3 rounded-lg">
         {{ message }}
@@ -132,19 +167,9 @@ onMounted(() => {
       <div class="actions-container mt-6 text-center flex justify-center gap-4">
         <button
           @click="fetchLeaderboard"
-          class="inline-flex items-center cursor-pointer py-1 px-3 text-white rounded-lg transition-colors bg-opacity-60 duration-300 hover:bg-indigo-700">
+          class="inline-flex items-center">
           <v-icon name="hi-refresh" class="mr-2" />
           Refresh
-        </button>
-
-        <button
-          @click="seeAllPlayers = !seeAllPlayers"
-          class="inline-flex items-center cursor-pointer py-3 px-3 text-white rounded-lg transition-colors bg-opacity-60 duration-300 hover:bg-indigo-700">
-
-          <v-icon v-if="seeAllPlayers" name="gi-podium" class="mr-2" />
-          <v-icon v-else name="la-globe-solid" class="mr-2" />
-
-          {{ seeAllPlayers ? 'See top 20' : 'See all players' }}
         </button>
       </div>
     </div>

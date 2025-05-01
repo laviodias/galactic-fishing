@@ -118,7 +118,7 @@ onMounted(() => {
       <div class="actions-container mt-6 text-center">
         <button
           @click="fetchMarketItems"
-          class="inline-flex items-center cursor-pointer py-3 px-3 text-white rounded-lg bg-opacity-60">
+          class="inline-flex items-center">
           <v-icon name="hi-refresh" class="mr-2" />
           Refresh
         </button>

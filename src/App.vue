@@ -181,10 +181,7 @@ window.addEventListener('offline', updateOnlineStatus);
 
 .tab-button {
   outline: none;
-  cursor: pointer;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  transition: color 0.15s ease-in-out;
+  border-radius: 8px 8px 0 0;
 }
 
 .tab-item {
