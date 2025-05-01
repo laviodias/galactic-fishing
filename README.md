@@ -90,6 +90,10 @@ yarn preview
 
 Open your browser and navigate to the address provided in the console (usually `http://localhost:3000/` for `serve` or `http://localhost:4173/` for Vite's preview). This will allow you to test the application as it would be in a production environment, including the PWA features.
 
+### Production deploy
+
+This application is deployed on https://laviovale.com
+
 ## Bundle Size Optimization
 
 Several strategies have been employed to minimize the application's bundle size:
