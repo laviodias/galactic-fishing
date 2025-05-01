@@ -27,7 +27,7 @@ const fetchMarketItems = async () => {
     const data = await response.json();
     items.value = data.items;
 
-    if (response.headers.get('X-From-Service-Worker') === 'true') {
+    if (!navigator.onLine) {
       message.value = 'Market data loaded from cache.';
     } else {
       message.value = null;

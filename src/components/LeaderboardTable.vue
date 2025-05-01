@@ -32,8 +32,10 @@ const fetchLeaderboard = async () => {
     const data = await response.json();
     players.value = data.players;
 
-    if (response.status === 0 || response.headers.get('X-From-Cache') === 'true') {
+    if (!navigator.onLine) {
       message.value = 'Leaderboard data loaded from cache.';
+    } else {
+      message.value = null;
     }
   } catch (err) {
     message.value = 'Connection failed.';
